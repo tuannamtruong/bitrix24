@@ -13,7 +13,6 @@ namespace bitrix24.Controllers
 {
     public class HomeController : Controller
     {
-        readonly string URL = "https://nam.bitrix24.com/rest/user.get";
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
@@ -21,13 +20,18 @@ namespace bitrix24.Controllers
             _logger = logger;
         }
 
-        private async Task<string> GetRestGETResponse(string URI, string parameter = "")
+        /// <summary>
+        /// Get REST Response content as JSON object.
+        /// </summary>
+        /// <param name="BaseAddress">Base URI Address</param>
+        /// <param name="parameter">URI Parameters</param>
+        private async Task<string> GetRestGETResponse(string BaseAddress, string parameter = "")
         {
             string resultJson;
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(URI);
+            client.BaseAddress = new Uri(BaseAddress);
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage response = client.GetAsync("").Result;
+            HttpResponseMessage response = client.GetAsync(parameter).Result;
             if (response.IsSuccessStatusCode)
             {
                 resultJson = await response.Content.ReadAsStringAsync();
@@ -39,18 +43,23 @@ namespace bitrix24.Controllers
             client.Dispose();
             return resultJson;
         }
+
+        /// <summary>
+        /// Get authentication token.
+        /// </summary>
         private async Task<string> GetAuthToken()
         {
-            AuthenticationToken token;
-
             string result = await GetRestGETResponse("https://bx-oauth2.aasc.com.vn/bx/oauth2_token/local.6059aaa89c4930.05361744");
             if (string.IsNullOrEmpty(result))
                 return null;
-            token = JsonConvert.DeserializeObject<AuthenticationToken>(result);
-            return token.token;
+            var authenticationToken = JsonConvert.DeserializeObject<AuthenticationToken>(result);
+            return authenticationToken.token;
         }
 
-
+        /// <summary>
+        /// Get Listemployee from bitrix24
+        /// </summary>
+        /// <returns></returns>
         private async Task<ListEmployee> GetListEmployee()
         {
             string authToken = await GetAuthToken();
@@ -58,25 +67,15 @@ namespace bitrix24.Controllers
                 return null;
 
             string urlParameters = "?scope=&auth=" + authToken;
-            ListEmployee listEmployee;
-            HttpClient client = new HttpClient
-            {
-                BaseAddress = new Uri(URL)
-            };
-            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            HttpResponseMessage response = client.GetAsync(urlParameters).Result;
-            if (response.IsSuccessStatusCode)
-            {
-                string getResult = await response.Content.ReadAsStringAsync();
-                listEmployee = JsonConvert.DeserializeObject<ListEmployee>(getResult);
-            }
-            else
-            {
-                listEmployee = null;
-            }
-            client.Dispose();
+            string getResult = await GetRestGETResponse("https://nam.bitrix24.com/rest/user.get", urlParameters);
+            if (string.IsNullOrEmpty(getResult))
+                return null;
+
+            var listEmployee = JsonConvert.DeserializeObject<ListEmployee>(getResult);
             return listEmployee;
         }
+
+
         public IActionResult Index()
         {
             var listEmployee = GetListEmployee().Result;
