@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -49,7 +50,9 @@ namespace bitrix24.Controllers
         /// </summary>
         private async Task<string> GetAuthToken()
         {
-            string result = await GetRestGETResponse("https://bx-oauth2.aasc.com.vn/bx/oauth2_token/local.6059aaa89c4930.05361744");
+            StreamReader sr = new StreamReader(Directory.GetCurrentDirectory() + "\\appid.txt");
+            string appId= sr.ReadLine();
+            string result = await GetRestGETResponse("https://bx-oauth2.aasc.com.vn/bx/oauth2_token/" + appId);
             if (string.IsNullOrEmpty(result))
                 return null;
             var authenticationToken = JsonConvert.DeserializeObject<AuthenticationToken>(result);
