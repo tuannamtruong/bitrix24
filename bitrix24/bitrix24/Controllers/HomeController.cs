@@ -13,44 +13,41 @@ namespace bitrix24.Controllers
 {
     public class HomeController : Controller
     {
-        static HttpClient client = new HttpClient();
         string URL = "https://nam.bitrix24.com/rest/user.get";
-        string urlParameters = "?scope=&auth=9ec9596000533bb900533bb500000001e0e303757a459d5f7ffb195e082b1349f0d58d";
+        string urlParameters = "?scope=&auth=b0d7596000533bb900533bb500000001e0e30345b5cf38b573b84323f9d19896500c64";
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
-        private async Task<object> GetListEmployee()
+        private async Task<ListEmployee> GetListEmployee()
         {
-            HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri(URL);
-
-            // Add an Accept header for JSON format.
-            client.DefaultRequestHeaders.Accept.Add(
-            new MediaTypeWithQualityHeaderValue("application/json"));
-
-            // List data response.
-            HttpResponseMessage response = client.GetAsync(urlParameters).Result;  // Blocking call! Program will wait here until a response is received or a timeout occurs.
+            ListEmployee listEmployee;
+            HttpClient client = new HttpClient
+            {
+                BaseAddress = new Uri(URL)
+            };
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage response = client.GetAsync(urlParameters).Result;
             if (response.IsSuccessStatusCode)
             {
-                string result = response.Content.ReadAsStringAsync().Result;
-                var listEmployee = JsonConvert.DeserializeObject<ListEmployee>(result);
-
+                string getResult = await response.Content.ReadAsStringAsync();
+                listEmployee = JsonConvert.DeserializeObject<ListEmployee>(getResult);
             }
             else
             {
-                Console.WriteLine("{0} ({1})", (int)response.StatusCode, response.ReasonPhrase);
+                listEmployee = null;
             }
-
             client.Dispose();
-            return new object();
+            return listEmployee;
         }
         public IActionResult Index()
         {
-            GetListEmployee().Wait();
-            return View();
+            var listEmployee = GetListEmployee().Result;
+            if (listEmployee == null)
+                return View("Error");
+            return View(listEmployee);
         }
 
 
