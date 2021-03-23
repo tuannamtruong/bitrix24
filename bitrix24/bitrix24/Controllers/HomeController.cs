@@ -13,16 +13,51 @@ namespace bitrix24.Controllers
 {
     public class HomeController : Controller
     {
-        string URL = "https://nam.bitrix24.com/rest/user.get";
-        string urlParameters = "?scope=&auth=b0d7596000533bb900533bb500000001e0e30345b5cf38b573b84323f9d19896500c64";
+        readonly string URL = "https://nam.bitrix24.com/rest/user.get";
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
+
+        private async Task<string> GetRestGETResponse(string URI, string parameter = "")
+        {
+            string resultJson;
+            HttpClient client = new HttpClient();
+            client.BaseAddress = new Uri(URI);
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage response = client.GetAsync("").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                resultJson = await response.Content.ReadAsStringAsync();
+            }
+            else
+            {
+                resultJson = "";
+            }
+            client.Dispose();
+            return resultJson;
+        }
+        private async Task<string> GetAuthToken()
+        {
+            AuthenticationToken token;
+
+            string result = await GetRestGETResponse("https://bx-oauth2.aasc.com.vn/bx/oauth2_token/local.6059aaa89c4930.05361744");
+            if (string.IsNullOrEmpty(result))
+                return null;
+            token = JsonConvert.DeserializeObject<AuthenticationToken>(result);
+            return token.token;
+        }
+
+
         private async Task<ListEmployee> GetListEmployee()
         {
+            string authToken = await GetAuthToken();
+            if (string.IsNullOrEmpty(authToken))
+                return null;
+
+            string urlParameters = "?scope=&auth=" + authToken;
             ListEmployee listEmployee;
             HttpClient client = new HttpClient
             {
@@ -49,7 +84,6 @@ namespace bitrix24.Controllers
                 return View("Error");
             return View(listEmployee);
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
