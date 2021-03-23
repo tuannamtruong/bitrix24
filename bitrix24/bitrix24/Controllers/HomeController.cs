@@ -51,7 +51,7 @@ namespace bitrix24.Controllers
         private async Task<string> GetAuthToken()
         {
             StreamReader sr = new StreamReader(Directory.GetCurrentDirectory() + "\\appid.txt");
-            string appId= sr.ReadLine();
+            string appId = sr.ReadLine();
             string result = await GetRestGETResponse("https://bx-oauth2.aasc.com.vn/bx/oauth2_token/" + appId);
             if (string.IsNullOrEmpty(result))
                 return null;
@@ -85,6 +85,11 @@ namespace bitrix24.Controllers
             if (listEmployee == null)
                 return View("Error");
             return View(listEmployee);
+        }
+
+        public IActionResult Refresh()
+        {
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -3,7 +3,8 @@
 }
 @model ListEmployee
 
-<button>Refresh</button>
+<a class="btn btn-primary" asp-action="Refresh" asp-controller="Home">Refresh</a>
+
 <ul>
     @foreach (Result employee in Model.result)
     {
@@ -11,7 +12,3 @@
     }
 </ul>
 
-@*<div class="text-center">
-        <h1 class="display-4">Welcome</h1>
-        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    </div>*@
