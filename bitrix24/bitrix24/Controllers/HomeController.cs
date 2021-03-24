@@ -13,6 +13,7 @@ namespace bitrix24.Controllers
 {
     public class HomeController : Controller
     {
+        private const string AuthenticationFileName = "appid.txt";
         private readonly ILogger<HomeController> _logger;
         public Result currentEmployee;
         public static ListEmployee listEmployee;
@@ -51,7 +52,8 @@ namespace bitrix24.Controllers
         /// </summary>
         private async Task<string> GetAuthToken()
         {
-            StreamReader sr = new StreamReader(Directory.GetCurrentDirectory() + "\\appid.txt");
+            string pathToFile = Path.Combine(Directory.GetCurrentDirectory(), AuthenticationFileName);
+            StreamReader sr = new StreamReader(pathToFile);
             string appId = sr.ReadLine();
             string result = await GetRestGETResponse("https://bx-oauth2.aasc.com.vn/bx/oauth2_token/" + appId);
             if (string.IsNullOrEmpty(result))
