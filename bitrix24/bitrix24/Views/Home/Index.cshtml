@@ -18,89 +18,28 @@
     int i = 0;
     <script type="text/javascript">
         let index = 0;
-        let ID = "0";
-        let tempo
-        function SetIndex(input) {
+        let focusedEmployee;
+        function SetCurrentEmployee(input) {
             index = input;
-            //alert("Index = " + index);
-            tempo = document.activeElement;
-            //alert(tempo.innerHTML);
-            //alert(tempo.textContent);
+            focusedEmployee = document.activeElement;
         }
-
-        function DoIt()
+        function GetEmployeeInfo()
         {
-            //alert(tempo.innerHTML);
-            //alert(tempo.id);
-            location.href = '@Url.Action("DoIt", "Employee")?inx=' + tempo.id;
-
-            //$.ajax({
-            //    url: 'Employee/Caller'
-            //}).done(function () {
-            //    alert('Added');
-            //});
-
-            //let focusedEle = document.activeElement;
-            //alert(focusedEle.textContent);
-
-            //var currentElement = $get(currentElementId);
-            //alert(currentElement.textContent);
-
-            //let tempo = document.activeElement;
-            //alert(tempo.innerHTML);
-            //alert(tempo.textContent);
-
-            //let temp = document.getElementByClassName("li.item");
-            //alert(temp.textContent);
-
-             @*var myArray = new Array();
-            @foreach (var d in @Model.result)
-            {
-                @:myArray.push("@d");
-            }
-            alert(myArray[0].ID);
-            alert(myArray[1].ID);*@
-
-            @*let abc = @Model.result;
-             alert(abc[1].ID)*@
-
-
-            @*alert(@Model.result[0].ID)
-            alert(@Model.result[temp].ID)
-            alert(ID + " ID " + index + " index");*@
-
-
-            @*alert(@Model.result[index].NAME);*@
-            @*window.open('@Url.Action("DoIt", "Employee",ID)');*@
-            @*window.open('@Url.Action("DoIt", "Employee",Model.result[ID])');*@
-
+            location.href = '@Url.Action("DoIt", "Employee")?inx=' + focusedEmployee.id;
         }
     </script>
 
 
     <a class="btn btn-primary" asp-action="Refresh" asp-controller="Home">Refresh</a>
-    @*<a class="btn btn-primary" asp-action="DoIt" asp-controller="Employee" asp-route-employee=@index>View Employee</a>*@
+    <a class="btn btn-primary" onclick="GetEmployeeInfo()">View Employee</a>
 
-    <a class="btn btn-primary" onclick="DoIt()">View Employee</a>
-
-    @*@Html.ActionLink("Home", "Index", "Home", new { @class = "navigationButtons" })*@
-    @*<a class="btn btn-primary" href="@Url.Action("DoIt", "Employee", Model.result[i])">View Employee</a>*@
-    @*<a class="btn btn-primary" href="@Url.Action("DoIt", "Employee", Model.result[i])">View Employee</a>*@
-
-    <ul>
-        @foreach (Result employee in Model.result)
-        {
-        <li class="active item" id="@i" tabindex="@i" onclick="SetIndex(@i)">@i @employee.NAME</li>
-            @*<li class="active">@Html.ActionLink(@employee.NAME + " " + @employee.LAST_NAME, "Index", "Employee", Model.result[i]) </li>*@
-            ++i;
-        }
-    </ul>
-
-
-    @*<form asp-action="PostIt" asp-controller="Employee" method="post">
-            <button type="submit" class="btn btn-primary">Employee</button>
-
-            <input type="submit" value="Submit" />
-        </form>*@
+<ul>
+    @foreach (Result employee in Model.result)
+    {
+        <li class="active item" id="@i" tabindex="@i" onclick="SetCurrentEmployee(@i)">@employee.NAME @employee.LAST_NAME</li>
+        @*<li class="active">@Html.ActionLink(@employee.NAME + " " + @employee.LAST_NAME, "Index", "Employee", Model.result[i]) </li>*@
+        ++i;
+    }
+</ul>
 }
 

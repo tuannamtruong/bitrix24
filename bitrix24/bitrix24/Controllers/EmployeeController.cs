@@ -25,7 +25,6 @@ namespace bitrix24.Controllers
         public IActionResult DoIt(int inx)
         {
             var employee = HomeController.listEmployee.result[inx];
-            //var empl = HomeController.listEmployee.result.Where(x => x.ID.Equals(employee)).FirstOrDefault();
             return View(employee);
         }
     }

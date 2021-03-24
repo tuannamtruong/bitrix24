@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
@@ -98,11 +97,6 @@ namespace bitrix24.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult ViewEmployee(int employee)
-        {
-            // Pass the object
-            return RedirectToAction("Index", "Employee", listEmployee.result[employee]);
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
