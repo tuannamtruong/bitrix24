@@ -7,7 +7,7 @@ Go to the folder <code>bitrix24\bitrix24\bitrix24</code>
 
 Create a text file name <code>appid.txt</code> 
 
-Paste the <code>appid<\code> to this text file.
+Paste the <code>appid</code> to this text file.
 
 
 ## Run guide
