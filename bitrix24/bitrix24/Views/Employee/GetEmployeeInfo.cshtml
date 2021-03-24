@@ -1,14 +1,19 @@
 ﻿
 @{
-    ViewData["Title"] = "DoIt";
+    ViewData["Title"] = "Employee Info";
 }
 @model Result
 
-<h1>DoIt</h1>
+<h1>Employee Info</h1>
 
 @if (Model != null)
 {
     <p>Full Name: @Model.NAME @Model.LAST_NAME</p>
     <p>IsOnline: @Model.IS_ONLINE</p>
-    <p>@Model.PERSONAL_MOBILE</p>
+    <p>Mobile: @Model.PERSONAL_MOBILE</p>
+    <p>Date of Birth: @Model.PERSONAL_BIRTHDAY</p>
+    <p>Last Login: @Model.LAST_LOGIN</p>
+    <p>Gender: @Model.PERSONAL_GENDER</p>
+    <p>Phone: @Model.PERSONAL_PHONE</p>
+    <p>User type: @Model.USER_TYPE</p>
 }
