@@ -1,6 +1,4 @@
-﻿using bitrix24.Models;
-using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace bitrix24.Controllers
 {
@@ -10,21 +8,10 @@ namespace bitrix24.Controllers
         {
             return View();
         }
-        [HttpPost]
-        public IActionResult PostIt()
-        {
-            return View();
-        }
 
-        public IActionResult Caller(int inx)
+        public IActionResult GetEmployeeInfo(int index)
         {
-            
-            return View(inx);
-        }
-
-        public IActionResult DoIt(int inx)
-        {
-            var employee = HomeController.listEmployee.result[inx];
+            var employee = HomeController.listEmployee.result[index];
             return View(employee);
         }
     }

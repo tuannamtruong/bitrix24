@@ -3,11 +3,6 @@
 }
 @model ListEmployee
 <style>
-
-    .item:hover {
-        color: #2693ff;
-    }
-
     li:focus {
         background-color: lightblue;
     }
@@ -25,7 +20,7 @@
         }
         function GetEmployeeInfo()
         {
-            location.href = '@Url.Action("DoIt", "Employee")?inx=' + focusedEmployee.id;
+            location.href = '@Url.Action("GetEmployeeInfo", "Employee")?index=' + focusedEmployee.id;
         }
     </script>
 
