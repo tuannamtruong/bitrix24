@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewData["Title"] = "DoIt";
+}
+@model Result
+
+<h1>DoIt</h1>
+
+@if (Model != null)
+{
+    <p>Full Name: @Model.NAME @Model.LAST_NAME</p>
+    <p>IsOnline: @Model.IS_ONLINE</p>
+    <p>@Model.PERSONAL_MOBILE</p>
+}

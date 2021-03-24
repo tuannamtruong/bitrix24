@@ -15,6 +15,8 @@ namespace bitrix24.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        public Result currentEmployee;
+        public static ListEmployee listEmployee;
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -72,9 +74,13 @@ namespace bitrix24.Controllers
             string urlParameters = "?scope=&auth=" + authToken;
             string getResult = await GetRestGETResponse("https://nam.bitrix24.com/rest/user.get", urlParameters);
             if (string.IsNullOrEmpty(getResult))
-                return null;
-
-            var listEmployee = JsonConvert.DeserializeObject<ListEmployee>(getResult);
+            {
+                listEmployee = null;
+            }
+            else
+            {
+                listEmployee = JsonConvert.DeserializeObject<ListEmployee>(getResult);
+            }
             return listEmployee;
         }
 
@@ -90,6 +96,12 @@ namespace bitrix24.Controllers
         public IActionResult Refresh()
         {
             return RedirectToAction("Index");
+        }
+
+        public IActionResult ViewEmployee(int employee)
+        {
+            // Pass the object
+            return RedirectToAction("Index", "Employee", listEmployee.result[employee]);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

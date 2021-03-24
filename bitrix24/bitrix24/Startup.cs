@@ -51,6 +51,9 @@ namespace bitrix24
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapControllerRoute(
+                    name: null,
+                    pattern: "{controller=Home}/{action=Index}");
             });
         }
     }
